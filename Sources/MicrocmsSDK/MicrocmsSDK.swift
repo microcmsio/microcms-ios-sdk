@@ -1,6 +1,6 @@
 import Foundation
 
-struct MicrocmsClient {
+public struct MicrocmsClient {
     
     private let baseDomain = "microcms.io"
     private let apiVersion = "v1"
@@ -9,7 +9,7 @@ struct MicrocmsClient {
     private let apiKey: String
     private let globalDrafyKey: String?
     
-    init(serviceDomain: String,
+    public init(serviceDomain: String,
          apiKey: String,
          globalDraftKey: String? = nil) {
         self.serviceDomain = serviceDomain
@@ -21,7 +21,7 @@ struct MicrocmsClient {
         return "https://\(serviceDomain).\(baseDomain)/api/\(apiVersion)"
     }
     
-    func get(endpoint: String,
+    public func get(endpoint: String,
              contentId: String?,
              parameter: [String: String]?,
              completion: @escaping ((Result<Any, Error>) -> Void)) {
