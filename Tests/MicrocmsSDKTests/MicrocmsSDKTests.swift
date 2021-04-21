@@ -2,14 +2,14 @@ import XCTest
 @testable import MicrocmsSDK
 
 final class MicrocmsSDKTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(MicrocmsSDK().text, "Hello, World!")
+    func testBaseUrl() {
+        let client = MicrocmsClient(
+            serviceDomain: "test-service",
+            apiKey: "test-api-key")
+        XCTAssertEqual(client.baseUrl, "https://test-service.microcms.io/api/v1")
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testExample", testBaseUrl),
     ]
 }
