@@ -29,7 +29,7 @@ let client = MicrocmsClient(
 ```
 
 And you can call some api like below.  
-Client will return `result`(`Result<[String: Any]>`) and you can use it.
+Client will return `result`(`Result<Any>`) and you can use it.
 ```swift
 client.get(
     endpoint: "API_ENDPOINT",
