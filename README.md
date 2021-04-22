@@ -12,7 +12,13 @@ Use swift package manager.
 
 ### Hot to use
 
-First, create a client.
+First, import microCMS SDK.
+
+```swift
+import MicrocmsSDK
+```
+
+Next, create a client.
 
 ```swift
 let client = MicrocmsClient(
@@ -22,7 +28,7 @@ let client = MicrocmsClient(
     )
 ```
 
-Next, you can call some api like below.  
+And you can call some api like below.  
 Client will return `result`(`Result<[String: Any]>`) and you can use it.
 ```swift
 client.get(
