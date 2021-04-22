@@ -1,6 +1,6 @@
 # microCMS iOS SDK
 
-It helps you to use microCMS from iOS(Swift) applications.
+It helps you to use microCMS from iOS(Swift) applications.  
 Check [the official documentation](https://document.microcms.io/tutorial/ios) for more information
 
 ## Getting Started
@@ -22,7 +22,7 @@ let client = MicrocmsClient(
     )
 ```
 
-Next, you can call some api like below.
+Next, you can call some api like below.  
 Client will return `result`(`Result<[String: Any]>`) and you can use it.
 ```swift
 client.get(
