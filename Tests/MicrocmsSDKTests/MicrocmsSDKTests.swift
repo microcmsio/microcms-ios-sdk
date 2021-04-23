@@ -38,19 +38,28 @@ final class MicrocmsSDKTests: XCTestCase {
             serviceDomain: "test-service",
             apiKey: "test-api-key")
         
-        let params: [String: String] = [
-            "fields": "id,publishedAt",
-            "filters": "createdAt[greater_than]2019-11",
-            "offset": "1",
-            "limit": "2",
+        let params: [MicrocmsParameter] = [
+            .fields(["id", "publishedAt"]),
+            .depth(2),
+            .limit(2),
+            .offset(1),
+            .orders(["-updatedAt"]),
+            .q("test"),
+            .ids(["first_id", "second_id"]),
+            .filters("createdAt[greater_than]2019-11"),
         ]
         let request = client.makeRequest(endpoint: "endpoint",
                                          contentId: nil,
                                          params: params)
         XCTAssertTrue(request?.url?.query?.contains("fields=id,publishedAt") == true)
-        XCTAssertTrue(request?.url?.query?.contains("filters=createdAt%5Bgreater_than%5D2019-11") == true)
-        XCTAssertTrue(request?.url?.query?.contains("offset=1") == true)
+        XCTAssertTrue(request?.url?.query?.contains("depth=2") == true)
         XCTAssertTrue(request?.url?.query?.contains("limit=2") == true)
+        XCTAssertTrue(request?.url?.query?.contains("offset=1") == true)
+        XCTAssertTrue(request?.url?.query?.contains("orders=-updatedAt") == true)
+        XCTAssertTrue(request?.url?.query?.contains("orders=-updatedAt") == true)
+        XCTAssertTrue(request?.url?.query?.contains("q=test") == true)
+        XCTAssertTrue(request?.url?.query?.contains("ids=first_id,second_id") == true)
+        XCTAssertTrue(request?.url?.query?.contains("filters=createdAt%5Bgreater_than%5D2019-11") == true)
     }
     
     func testMakeRequest_headers() {

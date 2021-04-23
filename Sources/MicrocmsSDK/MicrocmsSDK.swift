@@ -31,7 +31,7 @@ public struct MicrocmsClient {
     public func makeRequest(
         endpoint: String,
         contentId: String?,
-        params: [String: String]?) -> URLRequest? {
+        params: [MicrocmsParameter]?) -> URLRequest? {
         var urlString = baseUrl + "/" + endpoint
         if let contentId = contentId {
             urlString += "/\(contentId)"
@@ -46,9 +46,7 @@ public struct MicrocmsClient {
         }
         
         if let params = params {
-            components.queryItems = params.map {
-                URLQueryItem(name: $0.key, value: $0.value)
-            }
+            components.queryItems = params.map { $0.queryItem }
         }
         
         var request = URLRequest(url: components.url!)
@@ -73,7 +71,7 @@ public struct MicrocmsClient {
     public func get(
         endpoint: String,
         contentId: String? = nil,
-        params: [String: String]? = nil,
+        params: [MicrocmsParameter]? = nil,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
         
         guard let request = makeRequest(
@@ -83,11 +81,13 @@ public struct MicrocmsClient {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
-            do {
-                let object = try JSONSerialization.jsonObject(with: data, options: [])
-                completion(.success(object))
-            } catch let error {
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                do {
+                    let object = try JSONSerialization.jsonObject(with: data, options: [])
+                    completion(.success(object))
+                } catch let error {
+                    completion(.failure(error))
+                }
             }
         }
         task.resume()
