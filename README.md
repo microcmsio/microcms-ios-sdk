@@ -1,7 +1,7 @@
 # microCMS iOS SDK
 
 It helps you to use microCMS from iOS(Swift) applications.  
-Check [the official documentation](https://document.microcms.io/tutorial/ios) for more information
+Check [the official documentation](https://document.microcms.io/tutorial/ios/ios-top) for more information
 
 ## Getting Started
 
