@@ -7,14 +7,11 @@ public struct MicrocmsClient {
     
     private let serviceDomain: String
     private let apiKey: String
-    private let globalDrafyKey: String?
     
     public init(serviceDomain: String,
-         apiKey: String,
-         globalDraftKey: String? = nil) {
+         apiKey: String) {
         self.serviceDomain = serviceDomain
         self.apiKey = apiKey
-        self.globalDrafyKey = globalDraftKey
     }
     
     var baseUrl: String {
@@ -51,10 +48,7 @@ public struct MicrocmsClient {
         
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
-        if let globalDraftKey = globalDrafyKey {
-            request.setValue(globalDraftKey, forHTTPHeaderField: "X-GLOBAL-DRAFT-KEY")
-        }
+        request.setValue(apiKey, forHTTPHeaderField: "X-MICROCMS-API-KEY")
         
         return request
     }

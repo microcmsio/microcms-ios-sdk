@@ -23,8 +23,7 @@ Next, create a client.
 ```swift
 let client = MicrocmsClient(
     serviceDomain: "YOUR_DOMAIN", // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
-    apiKey: "YOUR_API_KEY",
-    globalDraftKey: "YOUR_GLOBAL_DRAFT_KEY" // if needed
+    apiKey: "YOUR_API_KEY"
     )
 ```
 
