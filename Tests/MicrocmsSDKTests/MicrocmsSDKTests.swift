@@ -63,32 +63,15 @@ final class MicrocmsSDKTests: XCTestCase {
     }
     
     func testMakeRequest_headers() {
-        XCTContext.runActivity(named: "normal") { _ in
-            let client = MicrocmsClient(
-                serviceDomain: "test-service",
-                apiKey: "test-api-key")
-            
-            let request = client.makeRequest(endpoint: "endpoint",
-                                             contentId: nil,
-                                             params: nil)
-            
-            XCTAssertEqual(request?.allHTTPHeaderFields, ["X-API-KEY": "test-api-key"])
-        }
+        let client = MicrocmsClient(
+            serviceDomain: "test-service",
+            apiKey: "test-api-key")
         
-        XCTContext.runActivity(named: "with_draft") { _ in
-            let client = MicrocmsClient(
-                serviceDomain: "test-service",
-                apiKey: "test-api-key",
-                globalDraftKey: "test-global-draft-key")
-            
-            let request = client.makeRequest(endpoint: "endpoint",
-                                             contentId: nil,
-                                             params: nil)
-            
-            XCTAssertEqual(request?.allHTTPHeaderFields,
-                           ["X-API-KEY": "test-api-key",
-                            "X-GLOBAL-DRAFT-KEY": "test-global-draft-key"])
-        }   
+        let request = client.makeRequest(endpoint: "endpoint",
+                                         contentId: nil,
+                                         params: nil)
+        
+        XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key"])
     }
     
     func testGet() {
