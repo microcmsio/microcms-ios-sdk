@@ -1,7 +1,7 @@
 # microCMS iOS SDK
 
 It helps you to use microCMS from iOS(Swift) applications.  
-Check [the official documentation](https://document.microcms.io/tutorial/ios) for more information
+Check [the official documentation](https://document.microcms.io/tutorial/ios/ios-top) for more information
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ Next, create a client.
 
 ```swift
 let client = MicrocmsClient(
-    serviceDomain: "YOUR_DOMAIN",
+    serviceDomain: "YOUR_DOMAIN", // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
     apiKey: "YOUR_API_KEY"
     )
 ```
@@ -30,9 +30,13 @@ let client = MicrocmsClient(
 And you can call some api like below.  
 Client will return `result`(`Result<Any>`) and you can use it.
 ```swift
+let params: [MicrocmsParameter] = [
+    .limit(2),
+    .filters("createdAt[greater_than]2021")
+]
 client.get(
     endpoint: "API_ENDPOINT",
-    params: ["limit": "2", "filters" to "createdAt[greater_than]2021") { result in
+    params: params) { result in
     switch result {
     case .success(let object):
         print("[SUCCESS]: \(object)")
@@ -40,11 +44,16 @@ client.get(
         print("[ERROR]: \(error)")
     }
 }
+```
 
+```swift
+let params: [MicrocmsParameter] = [
+    .fields(["id"]),
+]
 client.get(
     endpoint: "API_ENDPOINT",
     contentId: "CONTENT_ID",
-    params: ["fields": "id"]) { result in
+    params: params) { result in
     switch result {
     case .success(let object):
         print("[SUCCESS]: \(object)")
