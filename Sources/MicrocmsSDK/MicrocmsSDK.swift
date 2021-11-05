@@ -89,6 +89,14 @@ public struct MicrocmsClient {
         return task
     }
     
+    /// make write request for microCMS .
+    ///
+    /// - Parameters:
+    ///   - method: HTTP method.
+    ///   - endpoint: endpoint of contents.
+    ///   - contentId: contentId. It's needed if you want to fetch a element of list.
+    ///   - params: some parameters for body.
+    /// - Returns: URLRequest made with given parameters.
     public func makeWriteRequest(
         method: HTTPMethod,
         endpoint: String,
@@ -162,6 +170,13 @@ public struct MicrocmsClient {
         return task
     }
     
+    /// post content for microCMS .
+    ///
+    /// - Parameters:
+    ///   - endpoint: endpoint of contents.
+    ///   - params: some parameters for body.
+    /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
+    @discardableResult
     public func post(
         endpoint: String,
         params: [String: Any]?,
@@ -173,6 +188,14 @@ public struct MicrocmsClient {
                 completion: completion)
     }
     
+    /// put content for microCMS .
+    ///
+    /// - Parameters:
+    ///   - endpoint: endpoint of contents.
+    ///   - contentId: contentId. you can specify contentId for new content.
+    ///   - params: some parameters for body.
+    /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
+    @discardableResult
     public func put(
         endpoint: String,
         contentId: String,
@@ -185,6 +208,14 @@ public struct MicrocmsClient {
                 completion: completion)
     }
     
+    /// patch content for microCMS .
+    ///
+    /// - Parameters:
+    ///   - endpoint: endpoint of contents.
+    ///   - contentId: contentId of target.
+    ///   - params: some parameters for body.
+    /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
+    @discardableResult
     public func patch(
         endpoint: String,
         contentId: String,
@@ -197,6 +228,13 @@ public struct MicrocmsClient {
                 completion: completion)
     }
     
+    /// delete content for microCMS .
+    ///
+    /// - Parameters:
+    ///   - endpoint: endpoint of contents.
+    ///   - contentId: contentId of target.
+    /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
+    @discardableResult
     public func delete(
         endpoint: String,
         contentId: String,
