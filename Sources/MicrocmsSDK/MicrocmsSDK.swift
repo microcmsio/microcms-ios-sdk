@@ -29,29 +29,29 @@ public struct MicrocmsClient {
         endpoint: String,
         contentId: String?,
         params: [MicrocmsParameter]?) -> URLRequest? {
-        var urlString = baseUrl + "/" + endpoint
-        if let contentId = contentId {
-            urlString += "/\(contentId)"
+            var urlString = baseUrl + "/" + endpoint
+            if let contentId = contentId {
+                urlString += "/\(contentId)"
+            }
+            
+            guard let url = URL(string: urlString),
+                  var components = URLComponents(
+                    url: url,
+                    resolvingAgainstBaseURL: false) else {
+                        print("[ERROR] endpoint or parameter is invalid.")
+                        return nil
+                    }
+            
+            if let params = params {
+                components.queryItems = params.map { $0.queryItem }
+            }
+            
+            var request = URLRequest(url: components.url!)
+            request.httpMethod = "GET"
+            request.setValue(apiKey, forHTTPHeaderField: "X-MICROCMS-API-KEY")
+            
+            return request
         }
-        
-        guard let url = URL(string: urlString),
-              var components = URLComponents(
-                url: url,
-                resolvingAgainstBaseURL: false) else {
-            print("[ERROR] endpoint or parameter is invalid.")
-            return nil
-        }
-        
-        if let params = params {
-            components.queryItems = params.map { $0.queryItem }
-        }
-        
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.setValue(apiKey, forHTTPHeaderField: "X-MICROCMS-API-KEY")
-        
-        return request
-    }
     
     /// fetch microCMS contents.
     ///
@@ -67,27 +67,27 @@ public struct MicrocmsClient {
         contentId: String? = nil,
         params: [MicrocmsParameter]? = nil,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
-        
-        guard let request = makeRequest(
+            
+            guard let request = makeRequest(
                 endpoint: endpoint,
                 contentId: contentId,
                 params: params) else { return nil }
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            DispatchQueue.main.async {
-                do {
-                    let object = try JSONSerialization.jsonObject(with: data, options: [])
-                    completion(.success(object))
-                } catch let error {
-                    completion(.failure(error))
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let object = try JSONSerialization.jsonObject(with: data, options: [])
+                        completion(.success(object))
+                    } catch let error {
+                        completion(.failure(error))
+                    }
                 }
             }
+            task.resume()
+            
+            return task
         }
-        task.resume()
-        
-        return task
-    }
     
     /// make write request for microCMS .
     ///
@@ -96,31 +96,38 @@ public struct MicrocmsClient {
     ///   - endpoint: endpoint of contents.
     ///   - contentId: contentId. It's needed if you want to fetch a element of list.
     ///   - params: some parameters for body.
+    ///   - isDraft: if true, create or update content as draft.
     /// - Returns: URLRequest made with given parameters.
     public func makeWriteRequest(
         method: HTTPMethod,
         endpoint: String,
         contentId: String?,
-        params: [String: Any]?) -> URLRequest? {
-        
-        var urlString = baseUrl + "/" + endpoint
-        if let contentId = contentId {
-            urlString += "/" + contentId
+        params: [String: Any]?,
+        isDraft: Bool?) -> URLRequest? {
+            
+            var urlString = baseUrl + "/" + endpoint
+            if let contentId = contentId {
+                urlString += "/" + contentId
+            }
+            
+            guard let url = URL(string: urlString),
+                  var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                      print("[ERROR] endpoint or parameter is invalid.")
+                      return nil
+                  }
+            
+            if let isDraft = isDraft, isDraft {
+                components.queryItems = [.init(name: "status", value: "draft")]
+            }
+            
+            var request = URLRequest(url: components.url!)
+            request.httpMethod = method.rawValue
+            request.httpBody = makeBody(params: params)
+            request.setValue(apiKey, forHTTPHeaderField: "X-MICROCMS-API-KEY")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            return request
         }
-        
-        guard let url = URL(string: urlString) else {
-            print("[ERROR] endpoint or parameter is invalid.")
-            return nil
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.httpBody = makeBody(params: params)
-        request.setValue(apiKey, forHTTPHeaderField: "X-MICROCMS-API-KEY")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        return request
-    }
     
     private func makeBody(params: [String: Any]?) -> Data? {
         guard let params = params else { return nil }
@@ -139,11 +146,13 @@ public struct MicrocmsClient {
                          endpoint: String,
                          contentId: String?,
                          params: [String: Any]?,
+                         isDraft: Bool?,
                          completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
         let request = makeWriteRequest(method: method,
                                        endpoint: endpoint,
                                        contentId: contentId,
-                                       params: params)
+                                       params: params,
+                                       isDraft: isDraft)
         
         guard let request = request else {
             print("[ERROR] failed to make request")
@@ -175,40 +184,46 @@ public struct MicrocmsClient {
     /// - Parameters:
     ///   - endpoint: endpoint of contents.
     ///   - params: some parameters for body.
+    ///   - isDraft: if true, create or update content as draft.
     /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
     @discardableResult
-    public func post(
+    public func create(
         endpoint: String,
         params: [String: Any]?,
+        isDraft: Bool,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
-        request(method: .POST,
-                endpoint: endpoint,
-                contentId: nil,
-                params: params,
-                completion: completion)
-    }
+            request(method: .POST,
+                    endpoint: endpoint,
+                    contentId: nil,
+                    params: params,
+                    isDraft: isDraft,
+                    completion: completion)
+        }
     
-    /// put content for microCMS .
+    /// create content with specified ID.
     ///
     /// - Parameters:
     ///   - endpoint: endpoint of contents.
     ///   - contentId: contentId. you can specify contentId for new content.
     ///   - params: some parameters for body.
+    ///   - isDraft: if true, create or update content as draft.
     /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
     @discardableResult
-    public func put(
+    public func create(
         endpoint: String,
         contentId: String,
         params: [String: Any]?,
+        isDraft: Bool,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
-        request(method: .PUT,
-                endpoint: endpoint,
-                contentId: contentId,
-                params: params,
-                completion: completion)
-    }
+            request(method: .PUT,
+                    endpoint: endpoint,
+                    contentId: contentId,
+                    params: params,
+                    isDraft: isDraft,
+                    completion: completion)
+        }
     
-    /// patch content for microCMS .
+    /// update content for microCMS .
     ///
     /// - Parameters:
     ///   - endpoint: endpoint of contents.
@@ -216,17 +231,18 @@ public struct MicrocmsClient {
     ///   - params: some parameters for body.
     /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
     @discardableResult
-    public func patch(
+    public func update(
         endpoint: String,
-        contentId: String,
+        contentId: String? = nil,
         params: [String: Any]?,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
-        request(method: .PATCH,
-                endpoint: endpoint,
-                contentId: contentId,
-                params: params,
-                completion: completion)
-    }
+            request(method: .PATCH,
+                    endpoint: endpoint,
+                    contentId: contentId,
+                    params: params,
+                    isDraft: nil,
+                    completion: completion)
+        }
     
     /// delete content for microCMS .
     ///
@@ -239,12 +255,13 @@ public struct MicrocmsClient {
         endpoint: String,
         contentId: String,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
-        request(method: .DELETE,
-                endpoint: endpoint,
-                contentId: contentId,
-                params: nil,
-                completion: completion)
-    }
+            request(method: .DELETE,
+                    endpoint: endpoint,
+                    contentId: contentId,
+                    params: nil,
+                    isDraft: nil,
+                    completion: completion)
+        }
 }
 
 public enum HTTPMethod: String {

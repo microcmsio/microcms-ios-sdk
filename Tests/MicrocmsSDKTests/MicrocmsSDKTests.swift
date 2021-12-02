@@ -88,7 +88,7 @@ final class MicrocmsSDKTests: XCTestCase {
         XCTAssertNotNil(task)
     }
     
-    func testMakeWriteRequest_post() {
+    func testCreateRequest() {
         let client = MicrocmsClient(
             serviceDomain: "test-service",
             apiKey: "test-api-key")
@@ -96,7 +96,8 @@ final class MicrocmsSDKTests: XCTestCase {
         let request = client.makeWriteRequest(method: .POST,
                                               endpoint: "test-endpoint",
                                               contentId: nil,
-                                              params: params)
+                                              params: params,
+                                              isDraft: false)
         XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint")
         XCTAssertEqual(request?.httpMethod, "POST")
         XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
@@ -108,7 +109,28 @@ final class MicrocmsSDKTests: XCTestCase {
         XCTAssertEqual(request?.httpBody, expectedData)
     }
     
-    func testMakeWriteRequest_put() {
+    func testCreateRequest_draft() {
+        let client = MicrocmsClient(
+            serviceDomain: "test-service",
+            apiKey: "test-api-key")
+        let params = ["title": "test-title"]
+        let request = client.makeWriteRequest(method: .POST,
+                                              endpoint: "test-endpoint",
+                                              contentId: nil,
+                                              params: params,
+                                              isDraft: true)
+        XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint?status=draft")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
+                                                      "Content-Type": "application/json"])
+        
+        let expectedData = try! JSONSerialization.data(
+            withJSONObject: params,
+            options: .prettyPrinted)
+        XCTAssertEqual(request?.httpBody, expectedData)
+    }
+    
+    func testCreateRequest_withID() {
         let client = MicrocmsClient(
             serviceDomain: "test-service",
             apiKey: "test-api-key")
@@ -116,7 +138,8 @@ final class MicrocmsSDKTests: XCTestCase {
         let request = client.makeWriteRequest(method: .PUT,
                                               endpoint: "test-endpoint",
                                               contentId: "test-contentId",
-                                              params: params)
+                                              params: params,
+                                              isDraft: false)
         XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint/test-contentId")
         XCTAssertEqual(request?.httpMethod, "PUT")
         XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
@@ -128,7 +151,28 @@ final class MicrocmsSDKTests: XCTestCase {
         XCTAssertEqual(request?.httpBody, expectedData)
     }
     
-    func testMakeWriteRequest_patch() {
+    func testCreateRequest_withID_draft() {
+        let client = MicrocmsClient(
+            serviceDomain: "test-service",
+            apiKey: "test-api-key")
+        let params = ["title": "test-title"]
+        let request = client.makeWriteRequest(method: .PUT,
+                                              endpoint: "test-endpoint",
+                                              contentId: "test-contentId",
+                                              params: params,
+                                              isDraft: true)
+        XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint/test-contentId?status=draft")
+        XCTAssertEqual(request?.httpMethod, "PUT")
+        XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
+                                                      "Content-Type": "application/json"])
+        
+        let expectedData = try! JSONSerialization.data(
+            withJSONObject: params,
+            options: .prettyPrinted)
+        XCTAssertEqual(request?.httpBody, expectedData)
+    }
+    
+    func testUpdateRequest() {
         let client = MicrocmsClient(
             serviceDomain: "test-service",
             apiKey: "test-api-key")
@@ -136,7 +180,8 @@ final class MicrocmsSDKTests: XCTestCase {
         let request = client.makeWriteRequest(method: .PATCH,
                                               endpoint: "test-endpoint",
                                               contentId: "test-contentId",
-                                              params: params)
+                                              params: params,
+                                              isDraft: nil)
         XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint/test-contentId")
         XCTAssertEqual(request?.httpMethod, "PATCH")
         XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
@@ -148,14 +193,36 @@ final class MicrocmsSDKTests: XCTestCase {
         XCTAssertEqual(request?.httpBody, expectedData)
     }
     
-    func testMakeWriteRequest_delete() {
+    func testUpdateRequest_objectForm() {
+        let client = MicrocmsClient(
+            serviceDomain: "test-service",
+            apiKey: "test-api-key")
+        let params = ["title": "test-title"]
+        let request = client.makeWriteRequest(method: .PATCH,
+                                              endpoint: "test-endpoint",
+                                              contentId: nil,
+                                              params: params,
+                                              isDraft: nil)
+        XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint")
+        XCTAssertEqual(request?.httpMethod, "PATCH")
+        XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
+                                                      "Content-Type": "application/json"])
+        
+        let expectedData = try! JSONSerialization.data(
+            withJSONObject: params,
+            options: .prettyPrinted)
+        XCTAssertEqual(request?.httpBody, expectedData)
+    }
+    
+    func testDeleteRequest() {
         let client = MicrocmsClient(
             serviceDomain: "test-service",
             apiKey: "test-api-key")
         let request = client.makeWriteRequest(method: .DELETE,
                                               endpoint: "test-endpoint",
                                               contentId: "test-contentId",
-                                              params: nil)
+                                              params: nil,
+                                              isDraft: nil)
         XCTAssertEqual(request?.url?.absoluteString, "https://test-service.microcms.io/api/v1/test-endpoint/test-contentId")
         XCTAssertEqual(request?.httpMethod, "DELETE")
         XCTAssertEqual(request?.allHTTPHeaderFields, ["X-MICROCMS-API-KEY": "test-api-key",
@@ -170,9 +237,11 @@ final class MicrocmsSDKTests: XCTestCase {
          testMakeGetRequest_params,
          testMakeGetRequest_headers,
          testGet,
-         testMakeWriteRequest_post,
-         testMakeWriteRequest_put,
-         testMakeWriteRequest_patch,
-         testMakeWriteRequest_delete),
+         testCreateRequest,
+         testCreateRequest_draft,
+         testCreateRequest_withID,
+         testCreateRequest_withID_draft,
+         testUpdateRequest,
+         testDeleteRequest),
     ]
 }
