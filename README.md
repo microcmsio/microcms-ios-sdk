@@ -10,15 +10,15 @@ Check [the official documentation](https://document.microcms.io/tutorial/ios/ios
 Use swift package manager.
 
 
-### Hot to use
+## Hot to use
 
-First, import microCMS SDK.
+### Import
 
 ```swift
 import MicrocmsSDK
 ```
 
-Next, create a client.
+### Create client object
 
 ```swift
 let client = MicrocmsClient(
@@ -27,8 +27,17 @@ let client = MicrocmsClient(
     )
 ```
 
-And you can call some api like below.  
-Client will return `result`(`Result<Any>`) and you can use it.
+### Get content list
+
+```
+client.get(
+    endpoint: "API_ENDPOINT") { result in
+    print(result)
+}
+```
+
+### Get content list with parameters
+
 ```swift
 let params: [MicrocmsParameter] = [
     .limit(2),
@@ -37,14 +46,11 @@ let params: [MicrocmsParameter] = [
 client.get(
     endpoint: "API_ENDPOINT",
     params: params) { result in
-    switch result {
-    case .success(let object):
-        print("[SUCCESS]: \(object)")
-    case .failure(let error):
-        print("[ERROR]: \(error)")
-    }
+    print(result)
 }
 ```
+
+### Get single content
 
 ```swift
 let params: [MicrocmsParameter] = [
@@ -54,11 +60,78 @@ client.get(
     endpoint: "API_ENDPOINT",
     contentId: "CONTENT_ID",
     params: params) { result in
-    switch result {
-    case .success(let object):
-        print("[SUCCESS]: \(object)")
-    case .failure(let error):
-        print("[ERROR]: \(error)")
-    }
+    print(result)
+}
+```
+
+### Get object form content
+
+```swift
+client.get(
+    endpoint: "API_ENDPOINT") { result in
+    print(result)
+}
+```
+
+### Create content
+
+```swift
+client.create(
+    endpoint: "API_ENDPOINT",
+    params: ["text": "Hello iOS SDK!"]) { result in
+    print(result)
+}
+```
+
+### Create content with specified ID
+
+```swift
+client.create(
+    endpoint: "API_ENDPOINT",
+    contentId: "CONTENT_ID",
+    params: ["text": "Hello iOS SDK!"]) { result in
+    print(result)
+}
+```
+
+### Create draft content
+
+```swift
+client.create(
+    endpoint: "API_ENDPOINT",
+    params: ["text": "Hello iOS SDK!"],
+    isDraft: true) { result in
+    print(result)
+}
+```
+
+### Update content
+
+```swift
+client.update(
+    endpoint: "API_ENDPOINT",
+    contentId: "CONTENT_ID",
+    params: ["text": "Hello iOS SDK update method!"]) { result in
+    print(result)
+}
+``` 
+
+### Update object form content
+
+```swift
+client.update(
+    endpoint: "API_ENDPOINT",
+    params: ["text": "Hello iOS SDK update method!"]) { result in
+    print(result)
+}
+```
+
+### Delete content
+
+```swift
+client.delete(
+    endpoint: "API_ENDPOINT",
+    contentId: "CONTENT_ID") { result in
+    print(result)
 }
 ```

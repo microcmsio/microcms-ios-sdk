@@ -190,7 +190,7 @@ public struct MicrocmsClient {
     public func create(
         endpoint: String,
         params: [String: Any]?,
-        isDraft: Bool,
+        isDraft: Bool = false,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
             request(method: .POST,
                     endpoint: endpoint,
@@ -213,7 +213,7 @@ public struct MicrocmsClient {
         endpoint: String,
         contentId: String,
         params: [String: Any]?,
-        isDraft: Bool,
+        isDraft: Bool = false,
         completion: @escaping ((Result<Any, Error>) -> Void)) -> URLSessionTask? {
             request(method: .PUT,
                     endpoint: endpoint,
