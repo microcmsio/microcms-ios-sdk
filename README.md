@@ -29,7 +29,7 @@ let client = MicrocmsClient(
 
 ### Get content list
 
-```
+```swift
 client.get(
     endpoint: "API_ENDPOINT") { result in
     print(result)
@@ -38,7 +38,7 @@ client.get(
 
 You can get decoded response like this:
 
-```
+```swift
 struct Response: Decodable {
     let contents: [MyContent]
     let totalCount: Int
