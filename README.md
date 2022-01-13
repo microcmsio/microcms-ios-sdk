@@ -36,6 +36,22 @@ client.get(
 }
 ```
 
+You can get decoded response like this:
+
+```
+struct Response: Decodable {
+    let contents: [MyContent]
+    let totalCount: Int
+    let offset: Int
+    let limit: Int
+}
+
+client.get(
+    endpoint: "API_ENDPOINT") { result: (Result<Response, Error>) in
+    print(result)
+}
+```
+
 ### Get content list with parameters
 
 ```swift

@@ -89,6 +89,42 @@ public struct MicrocmsClient {
             return task
         }
     
+    /// fetch microCMS contents.
+    ///
+    /// - Parameters:
+    ///   - endpoint: endpoint of contents.
+    ///   - contentId: contentId. It's needed if you want to fetch a element of list.
+    ///   - params: some parameters for filtering or sorting results.
+    ///   - completion: handler of api result, `T` or `Error`. T is decodable class.
+    /// - Returns: URLSessionTask you requested. Basically, you don't need to use it, but it helps you to manage state or cancel request.
+    @discardableResult
+    public func get<T: Decodable>(
+        endpoint: String,
+        contentId: String? = nil,
+        params: [MicrocmsParameter]? = nil,
+        completion: @escaping ((Result<T, Error>) -> Void)) -> URLSessionTask? {
+            
+            guard let request = makeRequest(
+                endpoint: endpoint,
+                contentId: contentId,
+                params: params) else { return nil }
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let object = try JSONDecoder().decode(T.self, from: data)
+                        completion(.success(object))
+                    } catch let error {
+                        completion(.failure(error))
+                    }
+                }
+            }
+            task.resume()
+            
+            return task
+        }
+    
     /// make write request for microCMS .
     ///
     /// - Parameters:
