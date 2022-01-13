@@ -47,7 +47,7 @@ struct Response: Decodable {
 }
 
 client.get(
-    endpoint: "API_ENDPOINT") { result: (Result<Response, Error>) in
+    endpoint: "API_ENDPOINT") { (result: Result<Response, Error>) in
     print(result)
 }
 ```
