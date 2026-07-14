@@ -5,7 +5,7 @@
 >
 > 新規利用は推奨していません。新規開発では代替手段の利用を検討してください。
 >
-> 詳細は[SDKの保守方針](https://document.microcms.io/manual/limitations#h3e85e9ca1d)をご覧ください。
+> 詳細は[SDKの保守方針](https://document.microcms.io/manual/limitations#h8725a1f02a)をご覧ください。
 
 iOS（Swift）アプリケーションからmicroCMSを簡単に利用できます。
 
