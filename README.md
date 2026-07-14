@@ -1,33 +1,38 @@
 # microCMS iOS SDK
 
-It helps you to use microCMS from iOS(Swift) applications.  
-Check [the official documentation](https://document.microcms.io/tutorial/ios/ios-top) for more information
+> [!WARNING]
+> このSDKの現在の保守レベルは `Deprecated` です。
+>
+> 新規利用は推奨していません。新規開発では代替手段の利用を検討してください。
+>
+> 詳細は[SDKの保守方針](https://document.microcms.io/manual/limitations#h8725a1f02a)をご覧ください。
 
-## Getting Started
+iOS（Swift）アプリケーションからmicroCMSを簡単に利用できます。
 
-### Installation
+## はじめに
 
-Use swift package manager.
+### インストール
 
+Swift Package Managerを使用してください。
 
-## Hot to use
+## 使い方
 
-### Import
+### インポート
 
 ```swift
 import MicrocmsSDK
 ```
 
-### Create client object
+### クライアントオブジェクトの作成
 
 ```swift
 let client = MicrocmsClient(
-    serviceDomain: "YOUR_DOMAIN", // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
+    serviceDomain: "YOUR_DOMAIN", // YOUR_DOMAINはXXXX.microcms.ioのXXXXの部分です
     apiKey: "YOUR_API_KEY"
     )
 ```
 
-### Get content list
+### コンテンツ一覧の取得
 
 ```swift
 client.get(
@@ -36,7 +41,7 @@ client.get(
 }
 ```
 
-You can get decoded response like this:
+次のように、デコードされたレスポンスを取得できます。
 
 ```swift
 struct Response: Decodable {
@@ -52,7 +57,7 @@ client.get(
 }
 ```
 
-### Get content list with parameters
+### パラメータを指定したコンテンツ一覧の取得
 
 ```swift
 let params: [MicrocmsParameter] = [
@@ -66,7 +71,7 @@ client.get(
 }
 ```
 
-### Get single content
+### 単一コンテンツの取得
 
 ```swift
 let params: [MicrocmsParameter] = [
@@ -80,7 +85,7 @@ client.get(
 }
 ```
 
-### Get object form content
+### オブジェクト形式のコンテンツの取得
 
 ```swift
 client.get(
@@ -89,7 +94,7 @@ client.get(
 }
 ```
 
-### Create content
+### コンテンツの作成
 
 ```swift
 client.create(
@@ -99,7 +104,7 @@ client.create(
 }
 ```
 
-### Create content with specified ID
+### IDを指定したコンテンツの作成
 
 ```swift
 client.create(
@@ -110,7 +115,7 @@ client.create(
 }
 ```
 
-### Create draft content
+### 下書きコンテンツの作成
 
 ```swift
 client.create(
@@ -121,7 +126,7 @@ client.create(
 }
 ```
 
-### Update content
+### コンテンツの更新
 
 ```swift
 client.update(
@@ -132,7 +137,7 @@ client.update(
 }
 ``` 
 
-### Update object form content
+### オブジェクト形式のコンテンツの更新
 
 ```swift
 client.update(
@@ -142,7 +147,7 @@ client.update(
 }
 ```
 
-### Delete content
+### コンテンツの削除
 
 ```swift
 client.delete(
