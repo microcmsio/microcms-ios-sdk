@@ -9,8 +9,6 @@
 
 iOS（Swift）アプリケーションからmicroCMSを簡単に利用できます。
 
-詳しくは[公式ドキュメント](https://document.microcms.io/tutorial/ios/ios-top)をご覧ください。
-
 ## はじめに
 
 ### インストール
